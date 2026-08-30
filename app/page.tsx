@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, Plus, Search, Sparkles, Store } from 'lucide-react';
+import { Loader2, Plus, Search, Sparkles, Store, X } from 'lucide-react';
 import PopCard from '@/components/PopCard';
 import { RETAILERS } from '@/lib/types';
 import type { Figure } from '@/lib/types';
@@ -11,6 +11,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [retailerFilter, setRetailerFilter] = useState('All');
+  const [characterFilter, setCharacterFilter] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name'>('date-desc');
 
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function HomePage() {
     let list = items.filter(
       (i) =>
         (retailerFilter === 'All' || i.retailer === retailerFilter) &&
+        (characterFilter === null || (i.character || i.name) === characterFilter) &&
         (i.name.toLowerCase().includes(query.toLowerCase()) ||
           (i.series ?? '').toLowerCase().includes(query.toLowerCase()))
     );
@@ -33,7 +35,7 @@ export default function HomePage() {
       return a.name.localeCompare(b.name);
     });
     return list;
-  }, [items, query, retailerFilter, sortBy]);
+  }, [items, query, retailerFilter, characterFilter, sortBy]);
 
   const droppingSoon = useMemo(() => {
     const now = new Date();
@@ -81,6 +83,18 @@ export default function HomePage() {
         <div className="text-xs mb-6 font-mono text-muted">
           {items.length} figure{items.length !== 1 ? 's' : ''} in the catalog
         </div>
+
+        {characterFilter && (
+          <div className="mb-6 flex items-center gap-2">
+            <span className="text-[10px] uppercase tracking-wide font-mono text-muted">Showing:</span>
+            <span className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-mono bg-panel border border-line text-card">
+              {characterFilter}
+              <button onClick={() => setCharacterFilter(null)} aria-label="Clear filter">
+                <X size={14} />
+              </button>
+            </span>
+          </div>
+        )}
 
         {droppingSoon.length > 0 && (
           <div className="mb-8 -mx-4 px-4 py-3 overflow-x-auto border-y border-line" style={{ background: 'linear-gradient(90deg, rgba(238,56,49,0.08), transparent)' }}>
@@ -158,6 +172,7 @@ export default function HomePage() {
                 item={item}
                 onEdit={(i) => (window.location.href = `/figure/${i.id}`)}
                 onDelete={handleDelete}
+                onCharacterClick={(c) => setCharacterFilter(c)}
               />
             ))}
           </div>
