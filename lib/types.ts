@@ -5,7 +5,8 @@ export type Figure = {
   retailer: string;
   release_date: string | null; // ISO date, e.g. "2026-08-29"
   image_url: string | null;
-  price: number | null;
+  reference_number: string | null;
+  character: string | null;
   notes: string | null;
   status: 'owned' | 'wishlist' | 'listed' | 'sold';
   created_at: string;
