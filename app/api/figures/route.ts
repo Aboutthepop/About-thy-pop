@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
       retailer: body.retailer ?? 'General Release',
       release_date: body.release_date || null,
       image_url: body.image_url || null,
-      price: body.price || null,
+      reference_number: body.reference_number || null,
+      character: body.character || null,
       notes: body.notes || null,
       status: body.status ?? 'owned',
     })
