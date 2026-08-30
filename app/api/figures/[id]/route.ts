@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 
+export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+  const db = supabaseAdmin();
+  const { data, error } = await db.from('figures').select('*').eq('id', params.id).single();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json(data);
+}
+
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const body = await req.json();
   const db = supabaseAdmin();
@@ -13,7 +21,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       retailer: body.retailer,
       release_date: body.release_date || null,
       image_url: body.image_url || null,
-      price: body.price || null,
+      reference_number: body.reference_number || null,
+      character: body.character || null,
       notes: body.notes,
       status: body.status,
     })
