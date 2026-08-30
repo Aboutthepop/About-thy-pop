@@ -127,34 +127,4 @@ export default function FigureFormPage() {
 
           <div>
             <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Photo</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} className="text-sm text-card" />
-            {uploading && <div className="text-xs text-muted mt-1">Uploading...</div>}
-            {form.image_url && (
-              <img src={form.image_url} alt="preview" className="mt-2 w-24 h-24 object-contain bg-cardWindow rounded-sm" />
-            )}
-          </div>
-
-          <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Price ($)</label>
-            <input
-              className={inputCls}
-              value={form.price}
-              onChange={(e) => setForm({ ...form, price: e.target.value })}
-              placeholder="e.g. 15.99"
-              inputMode="decimal"
-            />
-          </div>
-
-          <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Notes</label>
-            <textarea
-              className={inputCls}
-              style={{ minHeight: '70px' }}
-              value={form.notes}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              placeholder="Condition, box status, quantity..."
-            />
-          </div>
-        </div>
-
-        
+            
