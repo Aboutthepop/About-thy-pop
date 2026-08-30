@@ -11,7 +11,8 @@ const emptyForm = {
   retailer: 'General Release',
   release_date: '',
   image_url: '',
-  price: '',
+  reference_number: '',
+  character: '',
   notes: '',
   status: 'owned' as const,
 };
@@ -36,7 +37,8 @@ export default function FigureFormPage() {
           retailer: data.retailer,
           release_date: data.release_date ?? '',
           image_url: data.image_url ?? '',
-          price: data.price?.toString() ?? '',
+          reference_number: data.reference_number ?? '',
+          character: data.character ?? '',
           notes: data.notes ?? '',
           status: (data.status ?? 'owned') as any,
         })
@@ -89,6 +91,16 @@ export default function FigureFormPage() {
           </div>
 
           <div>
+            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Character</label>
+            <input
+              className={inputCls}
+              value={form.character}
+              onChange={(e) => setForm({ ...form, character: e.target.value })}
+              placeholder="e.g. Roy Kent (groups variants together)"
+            />
+          </div>
+
+          <div>
             <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Series / Line</label>
             <input
               className={inputCls}
@@ -125,23 +137,22 @@ export default function FigureFormPage() {
           </div>
 
           <div>
+            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Reference #</label>
+            <input
+              className={inputCls}
+              value={form.reference_number}
+              onChange={(e) => setForm({ ...form, reference_number: e.target.value })}
+              placeholder="e.g. 1353"
+            />
+          </div>
+
+          <div>
             <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Photo</label>
             <input type="file" accept="image/*" onChange={handleFileChange} className="text-sm text-card" />
             {uploading && <div className="text-xs text-muted mt-1">Uploading...</div>}
             {form.image_url && (
               <img src={form.image_url} alt="preview" className="mt-2 w-24 h-24 object-contain bg-cardWindow rounded-sm" />
             )}
-          </div>
-
-          <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Price ($)</label>
-            <input
-              className={inputCls}
-              value={form.price}
-              onChange={(e) => setForm({ ...form, price: e.target.value })}
-              placeholder="e.g. 15.99"
-              inputMode="decimal"
-            />
           </div>
 
           <div>
