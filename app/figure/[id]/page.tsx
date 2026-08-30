@@ -69,8 +69,7 @@ export default function FigureFormPage() {
     router.push('/');
   }
 
-  const inputCls =
-    'w-full rounded-sm px-3 py-2 text-sm outline-none bg-panel text-card border border-line font-body';
+  const inputCls = "w-full rounded-sm px-3 py-2 text-sm outline-none bg-panel text-card border border-line font-body";
 
   return (
     <div className="min-h-screen bg-vault px-4 py-8">
