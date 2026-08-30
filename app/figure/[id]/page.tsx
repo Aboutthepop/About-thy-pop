@@ -27,7 +27,7 @@ export default function FigureFormPage() {
 
   useEffect(() => {
     if (isNew) return;
-    fetch(`/api/figures/${params.id}`)
+    fetch('/api/figures/' + params.id)
       .then((r) => r.json())
       .then((data: Figure) =>
         setForm({
@@ -59,9 +59,9 @@ export default function FigureFormPage() {
     e.preventDefault();
     setSaving(true);
     const method = isNew ? 'POST' : 'PATCH';
-    const url = isNew ? '/api/figures' : `/api/figures/${params.id}`;
+    const url = isNew ? '/api/figures' : '/api/figures/' + params.id;
     await fetch(url, {
-      method,
+      method: method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
     });
@@ -126,4 +126,44 @@ export default function FigureFormPage() {
 
           <div>
             <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Photo</label>
-            
+            <input type="file" accept="image/*" onChange={handleFileChange} className="text-sm text-card" />
+            {uploading && <div className="text-xs text-muted mt-1">Uploading...</div>}
+            {form.image_url && (
+              <img src={form.image_url} alt="preview" className="mt-2 w-24 h-24 object-contain bg-cardWindow rounded-sm" />
+            )}
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Price ($)</label>
+            <input
+              className={inputCls}
+              value={form.price}
+              onChange={(e) => setForm({ ...form, price: e.target.value })}
+              placeholder="e.g. 15.99"
+              inputMode="decimal"
+            />
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Notes</label>
+            <textarea
+              className={inputCls}
+              style={{ minHeight: '70px' }}
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              placeholder="Condition, box status, quantity..."
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={saving}
+          className="w-full mt-5 py-2.5 rounded-sm font-bold text-sm font-mono bg-accent text-white disabled:opacity-60"
+        >
+          {saving ? 'SAVING...' : isNew ? 'ADD TO CATALOG' : 'SAVE CHANGES'}
+        </button>
+      </form>
+    </div>
+  );
+}
