@@ -1,10 +1,31 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, Plus, Search, Sparkles, Store, X } from 'lucide-react';
+import { Loader2, Menu, Plus, Search, Sparkles, Store, X } from 'lucide-react';
 import PopCard from '@/components/PopCard';
 import { RETAILERS } from '@/lib/types';
 import type { Figure } from '@/lib/types';
+
+const CATEGORIES = [
+  'Anime',
+  'Movies',
+  'TV Shows',
+  'Marvel',
+  'DC',
+  'Disney',
+  'Animation',
+  'Horror',
+  'Sports',
+  'Star Wars',
+  'Video Games',
+  'Pop! Rocks',
+  'Sanrio',
+  'Die-Cast!',
+];
+
+const CATEGORY_ALIASES: Record<string, string[]> = {
+  'TV Shows': ['ted lasso'],
+};
 
 export default function HomePage() {
   const [items, setItems] = useState<Figure[]>([]);
@@ -12,6 +33,8 @@ export default function HomePage() {
   const [query, setQuery] = useState('');
   const [retailerFilter, setRetailerFilter] = useState('All');
   const [characterFilter, setCharacterFilter] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name'>('date-desc');
 
   useEffect(() => {
@@ -22,20 +45,25 @@ export default function HomePage() {
   }, []);
 
   const filtered = useMemo(() => {
-    let list = items.filter(
-      (i) =>
-        (retailerFilter === 'All' || i.retailer === retailerFilter) &&
-        (characterFilter === null || (i.character || i.name) === characterFilter) &&
-        (i.name.toLowerCase().includes(query.toLowerCase()) ||
-          (i.series ?? '').toLowerCase().includes(query.toLowerCase()))
-    );
+    let list = items.filter((i) => {
+      const matchesRetailer = retailerFilter === 'All' || i.retailer === retailerFilter;
+      const matchesCharacter = characterFilter === null || (i.character || i.name) === characterFilter;
+      const seriesLower = (i.series ?? '').toLowerCase();
+      const matchesCategory =
+        categoryFilter === null ||
+        seriesLower.includes(categoryFilter.toLowerCase()) ||
+        (CATEGORY_ALIASES[categoryFilter] ?? []).includes(seriesLower);
+      const matchesQuery =
+        i.name.toLowerCase().includes(query.toLowerCase()) || seriesLower.includes(query.toLowerCase());
+      return matchesRetailer && matchesCharacter && matchesCategory && matchesQuery;
+    });
     list.sort((a, b) => {
       if (sortBy === 'date-desc') return (b.release_date ?? '').localeCompare(a.release_date ?? '');
       if (sortBy === 'date-asc') return (a.release_date ?? '').localeCompare(b.release_date ?? '');
       return a.name.localeCompare(b.name);
     });
     return list;
-  }, [items, query, retailerFilter, characterFilter, sortBy]);
+  }, [items, query, retailerFilter, characterFilter, categoryFilter, sortBy]);
 
   const droppingSoon = useMemo(() => {
     const now = new Date();
@@ -53,7 +81,7 @@ export default function HomePage() {
 
   async function handleDelete(id: string) {
     setItems((prev) => prev.filter((i) => i.id !== id));
-    await fetch(`/api/figures/${id}`, { method: 'DELETE' });
+    await fetch('/api/figures/' + id, { method: 'DELETE' });
   }
 
   return (
@@ -63,14 +91,68 @@ export default function HomePage() {
         style={{ background: 'radial-gradient(ellipse 60% 100% at 50% 0%, rgba(238,56,49,0.10), transparent)' }}
       />
 
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          style={{ background: 'rgba(0,0,0,0.6)' }}
+          onClick={() => setMenuOpen(false)}
+        >
+          <div
+            className="absolute inset-y-0 left-0 w-64 bg-panel border-r border-line p-5 overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <span className="font-display text-card text-sm">CATEGORIES</span>
+              <button onClick={() => setMenuOpen(false)} aria-label="Close menu">
+                <X size={18} className="text-muted" />
+              </button>
+            </div>
+            <div className="flex flex-col gap-1">
+              <button
+                onClick={() => {
+                  setCategoryFilter(null);
+                  setMenuOpen(false);
+                }}
+                className="text-left px-3 py-2 rounded-sm text-sm font-mono text-card hover:bg-vault"
+                style={{ background: categoryFilter === null ? 'rgba(238,56,49,0.15)' : 'transparent' }}
+              >
+                All Categories
+              </button>
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setCategoryFilter(cat);
+                    setMenuOpen(false);
+                  }}
+                  className="text-left px-3 py-2 rounded-sm text-sm font-mono text-card hover:bg-vault"
+                  style={{ background: categoryFilter === cat ? 'rgba(238,56,49,0.15)' : 'transparent' }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="relative max-w-6xl mx-auto px-4 pt-8 pb-16">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-1">
-          <div>
-            <div className="flex items-center gap-2 text-accent">
-              <Sparkles size={16} />
-              <span className="text-[10px] uppercase tracking-[0.2em] font-mono">Collector's Catalog</span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="p-2 rounded-sm bg-panel border border-line text-card"
+              aria-label="Open categories menu"
+            >
+              <Menu size={18} />
+            </button>
+            <div>
+              <div className="flex items-center gap-2 text-accent">
+                <Sparkles size={16} />
+                <span className="text-[10px] uppercase tracking-[0.2em] font-mono">Collector's Catalog</span>
+              </div>
+              <h1 className="text-3xl md:text-4xl mt-1 font-display text-card tracking-wide">ABOUT THY POP</h1>
             </div>
-            <h1 className="text-3xl md:text-4xl mt-1 font-display text-card tracking-wide">ABOUT THY POP</h1>
           </div>
           <a
             href="/figure/new"
@@ -84,15 +166,25 @@ export default function HomePage() {
           {items.length} figure{items.length !== 1 ? 's' : ''} in the catalog
         </div>
 
-        {characterFilter && (
-          <div className="mb-6 flex items-center gap-2">
+        {(characterFilter || categoryFilter) && (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
             <span className="text-[10px] uppercase tracking-wide font-mono text-muted">Showing:</span>
-            <span className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-mono bg-panel border border-line text-card">
-              {characterFilter}
-              <button onClick={() => setCharacterFilter(null)} aria-label="Clear filter">
-                <X size={14} />
-              </button>
-            </span>
+            {categoryFilter && (
+              <span className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-mono bg-panel border border-line text-card">
+                {categoryFilter}
+                <button onClick={() => setCategoryFilter(null)} aria-label="Clear category filter">
+                  <X size={14} />
+                </button>
+              </span>
+            )}
+            {characterFilter && (
+              <span className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-mono bg-panel border border-line text-card">
+                {characterFilter}
+                <button onClick={() => setCharacterFilter(null)} aria-label="Clear character filter">
+                  <X size={14} />
+                </button>
+              </span>
+            )}
           </div>
         )}
 
@@ -142,7 +234,7 @@ export default function HomePage() {
           >
             <option value="date-desc">Newest release</option>
             <option value="date-asc">Oldest release</option>
-            <option value="name">Name A–Z</option>
+            <option value="name">Name A-Z</option>
           </select>
         </div>
 
@@ -170,7 +262,7 @@ export default function HomePage() {
               <PopCard
                 key={item.id}
                 item={item}
-                onEdit={(i) => (window.location.href = `/figure/${i.id}`)}
+                onEdit={(i) => (window.location.href = '/figure/' + i.id)}
                 onDelete={handleDelete}
                 onCharacterClick={(c) => setCharacterFilter(c)}
               />
