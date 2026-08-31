@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { RETAILERS } from '@/lib/types';
+import { RETAILERS, VARIANTS, SIZES, PRODUCT_TYPES } from '@/lib/types';
 import type { Figure } from '@/lib/types';
 
 const emptyForm = {
@@ -13,6 +13,10 @@ const emptyForm = {
   image_url: '',
   reference_number: '',
   character: '',
+  sku: '',
+  variant: 'Common',
+  size: 'Standard',
+  product_type: '',
   notes: '',
   status: 'owned' as const,
 };
@@ -39,6 +43,10 @@ export default function FigureFormPage() {
           image_url: data.image_url ?? '',
           reference_number: data.reference_number ?? '',
           character: data.character ?? '',
+          sku: data.sku ?? '',
+          variant: data.variant ?? 'Common',
+          size: data.size ?? 'Standard',
+          product_type: data.product_type ?? '',
           notes: data.notes ?? '',
           status: (data.status ?? 'owned') as any,
         })
@@ -136,14 +144,71 @@ export default function FigureFormPage() {
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Variant</label>
+              <select
+                className={inputCls}
+                value={form.variant}
+                onChange={(e) => setForm({ ...form, variant: e.target.value })}
+              >
+                {VARIANTS.map((v) => (
+                  <option key={v} value={v}>
+                    {v}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Size</label>
+              <select
+                className={inputCls}
+                value={form.size}
+                onChange={(e) => setForm({ ...form, size: e.target.value })}
+              >
+                {SIZES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Reference #</label>
-            <input
+            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Product Type</label>
+            <select
               className={inputCls}
-              value={form.reference_number}
-              onChange={(e) => setForm({ ...form, reference_number: e.target.value })}
-              placeholder="e.g. 1353"
-            />
+              value={form.product_type}
+              onChange={(e) => setForm({ ...form, product_type: e.target.value })}
+            >
+              {PRODUCT_TYPES.map((p) => (
+                <option key={p} value={p}>
+                  {p === '' ? 'Standard Pop!' : p}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Reference #</label>
+              <input
+                className={inputCls}
+                value={form.reference_number}
+                onChange={(e) => setForm({ ...form, reference_number: e.target.value })}
+                placeholder="e.g. 1353"
+              />
+            </div>
+            <div>
+              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">SKU</label>
+              <input
+                className={inputCls}
+                value={form.sku}
+                onChange={(e) => setForm({ ...form, sku: e.target.value })}
+                placeholder="Your inventory SKU"
+              />
+            </div>
           </div>
 
           <div>
