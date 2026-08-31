@@ -26,6 +26,10 @@ export async function POST(req: NextRequest) {
       image_url: body.image_url || null,
       reference_number: body.reference_number || null,
       character: body.character || null,
+      sku: body.sku || null,
+      variant: body.variant || null,
+      size: body.size || null,
+      product_type: body.product_type || null,
       notes: body.notes || null,
       status: body.status ?? 'owned',
     })
