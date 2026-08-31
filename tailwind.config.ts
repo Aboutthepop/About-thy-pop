@@ -15,7 +15,7 @@ const config: Config = {
         accent: '#EE3831',
       },
       fontFamily: {
-        display: ['Bungee', 'system-ui', 'sans-serif'],
+        display: ['"Luckiest Guy"', 'system-ui', 'sans-serif'],
         body: ['Manrope', 'system-ui', 'sans-serif'],
         mono: ['"Space Mono"', 'monospace'],
       },
