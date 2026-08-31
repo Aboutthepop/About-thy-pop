@@ -3,10 +3,14 @@ export type Figure = {
   name: string;
   series: string;
   retailer: string;
-  release_date: string | null; // ISO date, e.g. "2026-08-29"
+  release_date: string | null;
   image_url: string | null;
   reference_number: string | null;
   character: string | null;
+  sku: string | null;
+  variant: string | null;
+  size: string | null;
+  product_type: string | null;
   notes: string | null;
   status: 'owned' | 'wishlist' | 'listed' | 'sold';
   created_at: string;
@@ -25,6 +29,37 @@ export const RETAILERS: RetailerMeta[] = [
   { name: 'SDCC / Con Excl.', color: '#D4AF37', ink: '#1B1D22' },
   { name: 'Barnes & Noble', color: '#2E7D32', ink: '#FFFFFF' },
   { name: 'General Release', color: '#8A8F98', ink: '#FFFFFF' },
+];
+
+export const VARIANTS = [
+  'Common',
+  'Chase',
+  'Flocked',
+  'Diamond/Glitter',
+  'Glow in the Dark',
+  'Metallic',
+  'Chrome',
+  'Black Light',
+];
+
+export const SIZES = ['Standard', 'Big-in-Box', 'Super', 'Jumbo', 'Mega'];
+
+export const PRODUCT_TYPES = [
+  '',
+  'Pop! Rides',
+  'Pop! Rides DLX',
+  'Pop! Rides Super DLX',
+  'Pop! Moment',
+  'Pop! Premium',
+  'Pop! Plus',
+  'Pop! DLX',
+  'Pop! Town',
+  'Vinyl Soda',
+  'Rewind',
+  'Mystery Mini',
+  'Open Box Minis',
+  'Pop! Keychain',
+  'Pen Topper',
 ];
 
 export function retailerMeta(name: string): RetailerMeta {
