@@ -26,7 +26,7 @@ export default function HomePage() {
   const [popLineFilter, setPopLineFilter] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<SortKey>('date-desc');
+  const [sortBy, setSortBy] = useState<SortKey>('name-asc');
 
   useEffect(() => {
     fetch('/api/figures')
