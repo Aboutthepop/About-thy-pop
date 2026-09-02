@@ -1,31 +1,21 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, Menu, Plus, Search, Sparkles, Store, X } from 'lucide-react';
+import { ChevronDown, Loader2, Menu, Plus, Search, Sparkles, Store, X } from 'lucide-react';
 import PopCard from '@/components/PopCard';
-import { RETAILERS } from '@/lib/types';
+import { RETAILERS, POP_LINES } from '@/lib/types';
 import type { Figure } from '@/lib/types';
 
-const CATEGORIES = [
-  'Anime',
-  'Movies',
-  'TV Shows',
-  'Marvel',
-  'DC',
-  'Disney',
-  'Animation',
-  'Horror',
-  'Sports',
-  'Star Wars',
-  'Video Games',
-  'Pop! Rocks',
-  'Sanrio',
-  'Die-Cast!',
-];
+type SortKey = 'date-desc' | 'date-asc' | 'ref-desc' | 'ref-asc' | 'name-asc' | 'name-desc';
 
-const CATEGORY_ALIASES: Record<string, string[]> = {
-  'TV Shows': ['ted lasso'],
-};
+const SORT_OPTIONS: { key: SortKey; label: string }[] = [
+  { key: 'date-desc', label: 'Newest Release' },
+  { key: 'date-asc', label: 'Oldest Release' },
+  { key: 'ref-desc', label: 'Reference # High to Low' },
+  { key: 'ref-asc', label: 'Reference # Low to High' },
+  { key: 'name-asc', label: 'A-Z' },
+  { key: 'name-desc', label: 'Z-A' },
+];
 
 export default function HomePage() {
   const [items, setItems] = useState<Figure[]>([]);
@@ -33,9 +23,10 @@ export default function HomePage() {
   const [query, setQuery] = useState('');
   const [retailerFilter, setRetailerFilter] = useState('All');
   const [characterFilter, setCharacterFilter] = useState<string | null>(null);
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [popLineFilter, setPopLineFilter] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name'>('date-desc');
+  const [sortOpen, setSortOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<SortKey>('date-desc');
 
   useEffect(() => {
     fetch('/api/figures')
@@ -48,22 +39,22 @@ export default function HomePage() {
     let list = items.filter((i) => {
       const matchesRetailer = retailerFilter === 'All' || i.retailer === retailerFilter;
       const matchesCharacter = characterFilter === null || (i.character || i.name) === characterFilter;
+      const matchesPopLine = popLineFilter === null || i.pop_line === popLineFilter;
       const seriesLower = (i.series ?? '').toLowerCase();
-      const matchesCategory =
-        categoryFilter === null ||
-        seriesLower.includes(categoryFilter.toLowerCase()) ||
-        (CATEGORY_ALIASES[categoryFilter] ?? []).includes(seriesLower);
       const matchesQuery =
         i.name.toLowerCase().includes(query.toLowerCase()) || seriesLower.includes(query.toLowerCase());
-      return matchesRetailer && matchesCharacter && matchesCategory && matchesQuery;
+      return matchesRetailer && matchesCharacter && matchesPopLine && matchesQuery;
     });
     list.sort((a, b) => {
       if (sortBy === 'date-desc') return (b.release_date ?? '').localeCompare(a.release_date ?? '');
       if (sortBy === 'date-asc') return (a.release_date ?? '').localeCompare(b.release_date ?? '');
+      if (sortBy === 'ref-desc') return (parseInt(b.reference_number || '0') || 0) - (parseInt(a.reference_number || '0') || 0);
+      if (sortBy === 'ref-asc') return (parseInt(a.reference_number || '0') || 0) - (parseInt(b.reference_number || '0') || 0);
+      if (sortBy === 'name-desc') return b.name.localeCompare(a.name);
       return a.name.localeCompare(b.name);
     });
     return list;
-  }, [items, query, retailerFilter, characterFilter, categoryFilter, sortBy]);
+  }, [items, query, retailerFilter, characterFilter, popLineFilter, sortBy]);
 
   const droppingSoon = useMemo(() => {
     const now = new Date();
@@ -84,6 +75,8 @@ export default function HomePage() {
     await fetch('/api/figures/' + id, { method: 'DELETE' });
   }
 
+  const currentSortLabel = SORT_OPTIONS.find((o) => o.key === sortBy)?.label ?? 'Sort';
+
   return (
     <div className="min-h-screen w-full bg-vault">
       <div
@@ -102,7 +95,7 @@ export default function HomePage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-5">
-              <span className="font-display text-card text-sm">CATEGORIES</span>
+              <span className="font-displayCard text-card text-sm">POP LINES</span>
               <button onClick={() => setMenuOpen(false)} aria-label="Close menu">
                 <X size={18} className="text-muted" />
               </button>
@@ -110,25 +103,25 @@ export default function HomePage() {
             <div className="flex flex-col gap-1">
               <button
                 onClick={() => {
-                  setCategoryFilter(null);
+                  setPopLineFilter(null);
                   setMenuOpen(false);
                 }}
                 className="text-left px-3 py-2 rounded-sm text-sm font-mono text-card hover:bg-vault"
-                style={{ background: categoryFilter === null ? 'rgba(238,56,49,0.15)' : 'transparent' }}
+                style={{ background: popLineFilter === null ? 'rgba(238,56,49,0.15)' : 'transparent' }}
               >
-                All Categories
+                All Pop Lines
               </button>
-              {CATEGORIES.map((cat) => (
+              {POP_LINES.map((line) => (
                 <button
-                  key={cat}
+                  key={line}
                   onClick={() => {
-                    setCategoryFilter(cat);
+                    setPopLineFilter(line);
                     setMenuOpen(false);
                   }}
                   className="text-left px-3 py-2 rounded-sm text-sm font-mono text-card hover:bg-vault"
-                  style={{ background: categoryFilter === cat ? 'rgba(238,56,49,0.15)' : 'transparent' }}
+                  style={{ background: popLineFilter === line ? 'rgba(238,56,49,0.15)' : 'transparent' }}
                 >
-                  {cat}
+                  {line}
                 </button>
               ))}
             </div>
@@ -142,7 +135,7 @@ export default function HomePage() {
             <button
               onClick={() => setMenuOpen(true)}
               className="p-2 rounded-sm bg-panel border border-line text-card"
-              aria-label="Open categories menu"
+              aria-label="Open pop lines menu"
             >
               <Menu size={18} />
             </button>
@@ -166,13 +159,13 @@ export default function HomePage() {
           {items.length} figure{items.length !== 1 ? 's' : ''} in the catalog
         </div>
 
-        {(characterFilter || categoryFilter) && (
+        {(characterFilter || popLineFilter) && (
           <div className="mb-6 flex flex-wrap items-center gap-2">
             <span className="text-[10px] uppercase tracking-wide font-mono text-muted">Showing:</span>
-            {categoryFilter && (
+            {popLineFilter && (
               <span className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-mono bg-panel border border-line text-card">
-                {categoryFilter}
-                <button onClick={() => setCategoryFilter(null)} aria-label="Clear category filter">
+                {popLineFilter}
+                <button onClick={() => setPopLineFilter(null)} aria-label="Clear pop line filter">
                   <X size={14} />
                 </button>
               </span>
@@ -227,15 +220,35 @@ export default function HomePage() {
               ))}
             </select>
           </div>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-            className="px-3 py-2 rounded-sm text-sm outline-none bg-panel text-card border border-line"
-          >
-            <option value="date-desc">Newest release</option>
-            <option value="date-asc">Oldest release</option>
-            <option value="name">Name A-Z</option>
-          </select>
+          <div className="relative">
+            <button
+              onClick={() => setSortOpen((v) => !v)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-sm text-sm bg-panel text-card border border-line"
+            >
+              {currentSortLabel}
+              <ChevronDown size={14} />
+            </button>
+            {sortOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setSortOpen(false)} />
+                <div className="absolute right-0 mt-1 w-52 bg-panel border border-line rounded-sm z-50 overflow-hidden">
+                  {SORT_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.key}
+                      onClick={() => {
+                        setSortBy(opt.key);
+                        setSortOpen(false);
+                      }}
+                      className="block w-full text-left px-3 py-2 text-sm font-mono text-card hover:bg-vault"
+                      style={{ background: sortBy === opt.key ? 'rgba(238,56,49,0.15)' : 'transparent' }}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {loading ? (
@@ -244,7 +257,7 @@ export default function HomePage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-24 rounded-lg border border-dashed border-line">
-            <div className="font-display text-card text-base mb-2">
+            <div className="font-displayCard text-card text-base mb-2">
               {items.length === 0 ? "Shelf's empty." : 'No figures match.'}
             </div>
             <div className="text-sm mb-5 text-muted">
