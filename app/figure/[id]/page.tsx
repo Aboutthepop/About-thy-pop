@@ -2,20 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { RETAILERS, VARIANTS, SIZES, PRODUCT_TYPES } from '@/lib/types';
+import { RETAILERS, VARIANTS, SIZES, PRODUCT_TYPES, POP_LINES, CON_TYPES } from '@/lib/types';
 import type { Figure } from '@/lib/types';
 
 const emptyForm = {
   name: '',
   series: '',
   retailer: 'General Release',
+  con_type: '',
+  pop_line: '',
   release_date: '',
   image_url: '',
   reference_number: '',
   character: '',
   sku: '',
   variant: 'Common',
-  size: 'Standard',
+  size: 'Standard [4"]',
   product_type: '',
   notes: '',
   status: 'owned' as const,
@@ -39,13 +41,15 @@ export default function FigureFormPage() {
           name: data.name,
           series: data.series ?? '',
           retailer: data.retailer,
+          con_type: data.con_type ?? '',
+          pop_line: data.pop_line ?? '',
           release_date: data.release_date ?? '',
           image_url: data.image_url ?? '',
           reference_number: data.reference_number ?? '',
           character: data.character ?? '',
           sku: data.sku ?? '',
           variant: data.variant ?? 'Common',
-          size: data.size ?? 'Standard',
+          size: data.size ?? 'Standard [4"]',
           product_type: data.product_type ?? '',
           notes: data.notes ?? '',
           status: (data.status ?? 'owned') as any,
@@ -84,7 +88,7 @@ export default function FigureFormPage() {
   return (
     <div className="min-h-screen bg-vault px-4 py-8">
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-        <h1 className="font-display text-card text-lg mb-5">{isNew ? 'ADD FIGURE' : 'EDIT FIGURE'}</h1>
+        <h1 className="font-displayCard text-card text-lg mb-5">{isNew ? 'ADD FIGURE' : 'EDIT FIGURE'}</h1>
 
         <div className="space-y-3">
           <div>
@@ -106,6 +110,22 @@ export default function FigureFormPage() {
               onChange={(e) => setForm({ ...form, character: e.target.value })}
               placeholder="e.g. Roy Kent (groups variants together)"
             />
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Pop Line</label>
+            <select
+              className={inputCls}
+              value={form.pop_line}
+              onChange={(e) => setForm({ ...form, pop_line: e.target.value })}
+            >
+              <option value="">Select a line</option>
+              {POP_LINES.map((line) => (
+                <option key={line} value={line}>
+                  {line}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -143,6 +163,24 @@ export default function FigureFormPage() {
               />
             </div>
           </div>
+
+          {form.retailer === 'Con Exclusive' && (
+            <div>
+              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Which Con</label>
+              <select
+                className={inputCls}
+                value={form.con_type}
+                onChange={(e) => setForm({ ...form, con_type: e.target.value })}
+              >
+                <option value="">Select a con</option>
+                {CON_TYPES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-3">
             <div>
