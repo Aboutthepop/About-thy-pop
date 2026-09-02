@@ -25,12 +25,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       image_url: body.image_url || null,
       image_url_2: body.image_url_2 || null,
       reference_number: body.reference_number || null,
-      character: body.character || null,
       related: body.related || null,
       sku: body.sku || null,
       variant: body.variant || null,
       size: body.size || null,
       product_type: body.product_type || null,
+      le_tier: body.le_tier || null,
+      le_amount: body.le_amount || null,
       notes: body.notes,
       status: body.status,
     })
@@ -38,14 +39,4 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
-}
-
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
-  const db = supabaseAdmin();
-  const { error } = await db.from('figures').delete().eq('id', params.id);
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true });
-}
+  if (error) return
