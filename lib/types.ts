@@ -3,6 +3,8 @@ export type Figure = {
   name: string;
   series: string;
   retailer: string;
+  con_type: string | null;
+  pop_line: string | null;
   release_date: string | null;
   image_url: string | null;
   reference_number: string | null;
@@ -26,9 +28,28 @@ export const RETAILERS: RetailerMeta[] = [
   { name: 'Walmart', color: '#0071CE', ink: '#FFFFFF' },
   { name: 'Amazon', color: '#FF9900', ink: '#1B1D22' },
   { name: 'Funko Shop', color: '#1596D0', ink: '#FFFFFF' },
-  { name: 'SDCC / Con Excl.', color: '#D4AF37', ink: '#1B1D22' },
+  { name: 'Con Exclusive', color: '#D4AF37', ink: '#1B1D22' },
   { name: 'Barnes & Noble', color: '#2E7D32', ink: '#FFFFFF' },
   { name: 'General Release', color: '#8A8F98', ink: '#FFFFFF' },
+];
+
+export const CON_TYPES = ['ECCC', 'NYCC', 'SDCC', 'LACC', 'C2E2'];
+
+export const POP_LINES = [
+  'Anime',
+  'Movies',
+  'TV Shows',
+  'Marvel',
+  'DC',
+  'Disney',
+  'Animation',
+  'Horror',
+  'Sports',
+  'Star Wars',
+  'Video Games',
+  'Pop! Rocks',
+  'Sanrio',
+  'Die-Cast!',
 ];
 
 export const VARIANTS = [
@@ -42,7 +63,7 @@ export const VARIANTS = [
   'Black Light',
 ];
 
-export const SIZES = ['Standard', 'Big-in-Box', 'Super', 'Jumbo', 'Mega'];
+export const SIZES = ['Standard [4"]', 'Super [6"]', 'Jumbo [10"]', 'Mega [18"]'];
 
 export const PRODUCT_TYPES = [
   '',
