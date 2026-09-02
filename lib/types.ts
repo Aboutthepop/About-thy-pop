@@ -7,8 +7,10 @@ export type Figure = {
   pop_line: string | null;
   release_date: string | null;
   image_url: string | null;
+  image_url_2: string | null;
   reference_number: string | null;
   character: string | null;
+  related: string | null;
   sku: string | null;
   variant: string | null;
   size: string | null;
@@ -36,20 +38,20 @@ export const RETAILERS: RetailerMeta[] = [
 export const CON_TYPES = ['ECCC', 'NYCC', 'SDCC', 'LACC', 'C2E2'];
 
 export const POP_LINES = [
-  'Anime',
-  'Movies',
-  'TV Shows',
-  'Marvel',
-  'DC',
-  'Disney',
   'Animation',
+  'Anime',
+  'DC',
+  'Die-Cast!',
+  'Disney',
   'Horror',
-  'Sports',
-  'Star Wars',
-  'Video Games',
+  'Marvel',
+  'Movies',
   'Pop! Rocks',
   'Sanrio',
-  'Die-Cast!',
+  'Sports',
+  'Star Wars',
+  'TV Shows',
+  'Video Games',
 ];
 
 export const VARIANTS = [
@@ -61,6 +63,7 @@ export const VARIANTS = [
   'Metallic',
   'Chrome',
   'Black Light',
+  'N/A',
 ];
 
 export const SIZES = ['Standard [4"]', 'Super [6"]', 'Jumbo [10"]', 'Mega [18"]'];
