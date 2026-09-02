@@ -15,6 +15,8 @@ export type Figure = {
   variant: string | null;
   size: string | null;
   product_type: string | null;
+  le_tier: string | null;
+  le_amount: string | null;
   notes: string | null;
   status: 'owned' | 'wishlist' | 'listed' | 'sold';
   created_at: string;
@@ -23,16 +25,17 @@ export type Figure = {
 export type RetailerMeta = { name: string; color: string; ink: string };
 
 export const RETAILERS: RetailerMeta[] = [
-  { name: 'Hot Topic', color: '#FFD400', ink: '#1B1D22' },
+  { name: 'Amazon', color: '#FF9900', ink: '#1B1D22' },
+  { name: 'Barnes & Noble', color: '#2E7D32', ink: '#FFFFFF' },
   { name: 'BoxLunch', color: '#7C2AE8', ink: '#FFFFFF' },
+  { name: 'Con Exclusive', color: '#D4AF37', ink: '#1B1D22' },
+  { name: 'Funko Shop', color: '#1596D0', ink: '#FFFFFF' },
   { name: 'GameStop', color: '#0055A4', ink: '#FFFFFF' },
+  { name: 'General Release', color: '#8A8F98', ink: '#FFFFFF' },
+  { name: 'Hot Topic', color: '#FFD400', ink: '#1B1D22' },
+  { name: 'N/A', color: '#5C6370', ink: '#FFFFFF' },
   { name: 'Target', color: '#CC0000', ink: '#FFFFFF' },
   { name: 'Walmart', color: '#0071CE', ink: '#FFFFFF' },
-  { name: 'Amazon', color: '#FF9900', ink: '#1B1D22' },
-  { name: 'Funko Shop', color: '#1596D0', ink: '#FFFFFF' },
-  { name: 'Con Exclusive', color: '#D4AF37', ink: '#1B1D22' },
-  { name: 'Barnes & Noble', color: '#2E7D32', ink: '#FFFFFF' },
-  { name: 'General Release', color: '#8A8F98', ink: '#FFFFFF' },
 ];
 
 export const CON_TYPES = ['ECCC', 'NYCC', 'SDCC', 'LACC', 'C2E2'];
@@ -55,6 +58,7 @@ export const POP_LINES = [
 ];
 
 export const VARIANTS = [
+  'N/A',
   'Common',
   'Chase',
   'Flocked',
@@ -63,19 +67,19 @@ export const VARIANTS = [
   'Metallic',
   'Chrome',
   'Black Light',
-  'N/A',
 ];
 
 export const SIZES = ['Standard [4"]', 'Super [6"]', 'Jumbo [10"]', 'Mega [18"]'];
 
 export const PRODUCT_TYPES = [
   '',
+  'Pop! Plus',
+  'Pop! Premium',
+  'Pop! Comic Book Cover',
   'Pop! Rides',
   'Pop! Rides DLX',
   'Pop! Rides Super DLX',
   'Pop! Moment',
-  'Pop! Premium',
-  'Pop! Plus',
   'Pop! DLX',
   'Pop! Town',
   'Vinyl Soda',
@@ -84,6 +88,18 @@ export const PRODUCT_TYPES = [
   'Open Box Minis',
   'Pop! Keychain',
   'Pen Topper',
+];
+
+export const LE_TIERS = [
+  'N/A',
+  'Ultimate',
+  'Mythic',
+  'Grail',
+  'Legendary',
+  'Royalty',
+  'Ultra',
+  'Elite',
+  'Supreme',
 ];
 
 export function retailerMeta(name: string): RetailerMeta {
