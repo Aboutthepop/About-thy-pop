@@ -22,6 +22,8 @@ export async function POST(req: NextRequest) {
       name: body.name,
       series: body.series ?? '',
       retailer: body.retailer ?? 'General Release',
+      con_type: body.con_type || null,
+      pop_line: body.pop_line || null,
       release_date: body.release_date || null,
       image_url: body.image_url || null,
       reference_number: body.reference_number || null,
