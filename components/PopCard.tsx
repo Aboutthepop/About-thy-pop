@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { Calendar, ImageOff, Pencil, Trash2 } from 'lucide-react';
-import Sticker from './Sticker';
 import type { Figure } from '@/lib/types';
 
 export default function PopCard({
@@ -18,11 +17,14 @@ export default function PopCard({
 }) {
   const dropSoon = item.release_date && new Date(item.release_date) > new Date();
   const characterName = item.character || item.name;
+  const showRetailer = item.retailer && item.retailer !== 'General Release';
+  const retailerLabel =
+    item.retailer === 'Con Exclusive' && item.con_type
+      ? 'Con Exclusive (' + item.con_type + ')'
+      : item.retailer;
 
   return (
     <div className="relative rounded-lg overflow-visible group bg-card">
-      <Sticker retailer={item.retailer} />
-
       <button
         onClick={() => onCharacterClick(characterName)}
         className="block w-full text-left"
@@ -47,7 +49,7 @@ export default function PopCard({
         </div>
 
         <div className="px-3 pt-2 pb-3">
-          <div className="text-[13px] leading-tight truncate font-display text-ink" title={item.name}>
+          <div className="text-[13px] leading-tight truncate font-displayCard text-ink" title={item.name}>
             {item.name || 'Untitled Pop'}
           </div>
           {item.series ? (
@@ -55,9 +57,9 @@ export default function PopCard({
               {item.series}
             </div>
           ) : null}
-          <div className="flex items-center justify-between mt-2">
+          <div className="flex items-center justify-between mt-2 gap-2">
             <div
-              className="flex items-center gap-1 text-[10px] font-mono"
+              className="flex items-center gap-1 text-[10px] font-mono flex-shrink-0"
               style={{ color: dropSoon ? '#B5442E' : '#8A8578' }}
             >
               <Calendar size={11} />
@@ -69,7 +71,12 @@ export default function PopCard({
                   })
                 : 'TBD'}
             </div>
-            {item.reference_number ? (
+            {showRetailer && (
+              <div className="text-[10px] font-mono truncate underline text-ink">
+                {retailerLabel}
+              </div>
+            )}
+            {item.reference_number && !showRetailer ? (
               <div className="text-[10px] font-mono font-bold text-ink">#{item.reference_number}</div>
             ) : null}
           </div>
