@@ -19,6 +19,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       name: body.name,
       series: body.series,
       retailer: body.retailer,
+      con_type: body.con_type || null,
+      pop_line: body.pop_line || null,
       release_date: body.release_date || null,
       image_url: body.image_url || null,
       reference_number: body.reference_number || null,
