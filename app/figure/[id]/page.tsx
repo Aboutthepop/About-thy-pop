@@ -2,25 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { RETAILERS, VARIANTS, SIZES, PRODUCT_TYPES, POP_LINES, CON_TYPES } from '@/lib/types';
+import { RETAILERS, VARIANTS, SIZES, PRODUCT_TYPES, POP_LINES, CON_TYPES, LE_TIERS } from '@/lib/types';
 import type { Figure } from '@/lib/types';
 
 const emptyForm = {
   name: '',
   series: '',
-  retailer: 'General Release',
+  retailer: 'N/A',
   con_type: '',
   pop_line: '',
   release_date: '',
   image_url: '',
   image_url_2: '',
   reference_number: '',
-  character: '',
   related: '',
   sku: '',
-  variant: 'Common',
+  variant: 'N/A',
   size: 'Standard [4"]',
   product_type: '',
+  le_tier: '',
+  le_amount: '',
   notes: '',
   status: 'owned' as const,
 };
@@ -50,12 +51,13 @@ export default function FigureFormPage() {
           image_url: data.image_url ?? '',
           image_url_2: data.image_url_2 ?? '',
           reference_number: data.reference_number ?? '',
-          character: data.character ?? '',
           related: data.related ?? '',
           sku: data.sku ?? '',
-          variant: data.variant ?? 'Common',
+          variant: data.variant ?? 'N/A',
           size: data.size ?? 'Standard [4"]',
           product_type: data.product_type ?? '',
+          le_tier: data.le_tier ?? '',
+          le_amount: data.le_amount ?? '',
           notes: data.notes ?? '',
           status: (data.status ?? 'owned') as any,
         })
@@ -116,16 +118,6 @@ export default function FigureFormPage() {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="e.g. Spider-Man (Zero Suit)"
-            />
-          </div>
-
-          <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Character</label>
-            <input
-              className={inputCls}
-              value={form.character}
-              onChange={(e) => setForm({ ...form, character: e.target.value })}
-              placeholder="e.g. Roy Kent (groups variants together)"
             />
           </div>
 
@@ -253,6 +245,35 @@ export default function FigureFormPage() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Limited Edition</label>
+              <select
+                className={inputCls}
+                value={form.le_tier}
+                onChange={(e) => setForm({ ...form, le_tier: e.target.value })}
+              >
+                <option value="">None</option>
+                {LE_TIERS.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {form.le_tier && (
+              <div>
+                <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">LE Amount</label>
+                <input
+                  className={inputCls}
+                  value={form.le_amount}
+                  onChange={(e) => setForm({ ...form, le_amount: e.target.value })}
+                  placeholder="e.g. 1 of 2500"
+                />
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
