@@ -13,8 +13,10 @@ const emptyForm = {
   pop_line: '',
   release_date: '',
   image_url: '',
+  image_url_2: '',
   reference_number: '',
   character: '',
+  related: '',
   sku: '',
   variant: 'Common',
   size: 'Standard [4"]',
@@ -30,6 +32,7 @@ export default function FigureFormPage() {
 
   const [form, setForm] = useState(emptyForm);
   const [uploading, setUploading] = useState(false);
+  const [uploading2, setUploading2] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -45,8 +48,10 @@ export default function FigureFormPage() {
           pop_line: data.pop_line ?? '',
           release_date: data.release_date ?? '',
           image_url: data.image_url ?? '',
+          image_url_2: data.image_url_2 ?? '',
           reference_number: data.reference_number ?? '',
           character: data.character ?? '',
+          related: data.related ?? '',
           sku: data.sku ?? '',
           variant: data.variant ?? 'Common',
           size: data.size ?? 'Standard [4"]',
@@ -67,6 +72,18 @@ export default function FigureFormPage() {
     const data = await res.json();
     setUploading(false);
     if (data.url) setForm((f) => ({ ...f, image_url: data.url }));
+  }
+
+  async function handleFileChange2(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading2(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    const res = await fetch('/api/upload', { method: 'POST', body: fd });
+    const data = await res.json();
+    setUploading2(false);
+    if (data.url) setForm((f) => ({ ...f, image_url_2: data.url }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -109,6 +126,16 @@ export default function FigureFormPage() {
               value={form.character}
               onChange={(e) => setForm({ ...form, character: e.target.value })}
               placeholder="e.g. Roy Kent (groups variants together)"
+            />
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Related</label>
+            <input
+              className={inputCls}
+              value={form.related}
+              onChange={(e) => setForm({ ...form, related: e.target.value })}
+              placeholder="e.g. actor, athlete, musician name"
             />
           </div>
 
@@ -255,6 +282,15 @@ export default function FigureFormPage() {
             {uploading && <div className="text-xs text-muted mt-1">Uploading...</div>}
             {form.image_url && (
               <img src={form.image_url} alt="preview" className="mt-2 w-24 h-24 object-contain bg-cardWindow rounded-sm" />
+            )}
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Second Photo (optional)</label>
+            <input type="file" accept="image/*" onChange={handleFileChange2} className="text-sm text-card" />
+            {uploading2 && <div className="text-xs text-muted mt-1">Uploading...</div>}
+            {form.image_url_2 && (
+              <img src={form.image_url_2} alt="preview 2" className="mt-2 w-24 h-24 object-contain bg-cardWindow rounded-sm" />
             )}
           </div>
 
