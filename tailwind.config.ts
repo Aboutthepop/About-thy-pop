@@ -16,6 +16,7 @@ const config: Config = {
       },
       fontFamily: {
         display: ['"Luckiest Guy"', 'system-ui', 'sans-serif'],
+        displayCard: ['Bungee', 'system-ui', 'sans-serif'],
         body: ['Manrope', 'system-ui', 'sans-serif'],
         mono: ['"Space Mono"', 'monospace'],
       },
