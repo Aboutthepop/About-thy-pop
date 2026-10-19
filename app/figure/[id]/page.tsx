@@ -327,14 +327,19 @@ export default function FigureFormPage() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={saving}
-          className="w-full mt-5 py-2.5 rounded-sm font-bold text-sm font-mono bg-accent text-white disabled:opacity-60"
-        >
-          {saving ? 'SAVING...' : isNew ? 'ADD TO CATALOG' : 'SAVE CHANGES'}
-        </button>
-      </form>
-    </div>
-  );
-}
+                <div className="flex gap-3 mt-5">
+          <button
+            type="button"
+            onClick={() => router.push('/')}
+            className="flex-1 py-2.5 rounded-sm font-bold text-sm font-mono bg-panel text-card border border-line"
+          >
+            CANCEL
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="flex-1 py-2.5 rounded-sm font-bold text-sm font-mono bg-accent text-white disabled:opacity-60"
+          >
+            {saving ? 'SAVING...' : isNew ? 'ADD TO CATALOG' : 'SAVE CHANGES'}
+          </button>
+        </div>
