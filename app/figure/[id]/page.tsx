@@ -103,6 +103,7 @@ export default function FigureFormPage() {
   }
 
   const inputCls = "w-full rounded-sm px-3 py-2 text-sm outline-none bg-panel text-card border border-line font-body";
+  const labelCls = "text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted";
 
   return (
     <div className="min-h-screen bg-vault px-4 py-8">
@@ -111,91 +112,83 @@ export default function FigureFormPage() {
 
         <div className="space-y-3">
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Name *</label>
+            <label className={labelCls}>Name *</label>
             <input
               required
-              className={inputCls}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="e.g. Spider-Man (Zero Suit)"
+              className={inputCls}
             />
           </div>
 
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Related</label>
+            <label className={labelCls}>Related</label>
             <input
-              className={inputCls}
               value={form.related}
               onChange={(e) => setForm({ ...form, related: e.target.value })}
               placeholder="e.g. actor, athlete, musician name"
+              className={inputCls}
             />
           </div>
 
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Pop Line</label>
+            <label className={labelCls}>Pop Line</label>
             <select
-              className={inputCls}
               value={form.pop_line}
               onChange={(e) => setForm({ ...form, pop_line: e.target.value })}
+              className={inputCls}
             >
               <option value="">Select a line</option>
-              {POP_LINES.map((line) => (
-                <option key={line} value={line}>
-                  {line}
-                </option>
+              {POP_LINES.map((p) => (
+                <option key={p} value={p}>{p}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Series / Line</label>
+            <label className={labelCls}>Series / Line</label>
             <input
-              className={inputCls}
               value={form.series}
               onChange={(e) => setForm({ ...form, series: e.target.value })}
-              placeholder="e.g. Marvel, POP Animation"
+              className={inputCls}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Exclusive Retailer</label>
+              <label className={labelCls}>Exclusive Retailer</label>
               <select
-                className={inputCls}
                 value={form.retailer}
                 onChange={(e) => setForm({ ...form, retailer: e.target.value })}
+                className={inputCls}
               >
                 {RETAILERS.map((r) => (
-                  <option key={r.name} value={r.name}>
-                    {r.name}
-                  </option>
+                  <option key={r.name} value={r.name}>{r.name}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Release Date</label>
+              <label className={labelCls}>Release Date</label>
               <input
                 type="date"
-                className={inputCls}
                 value={form.release_date}
                 onChange={(e) => setForm({ ...form, release_date: e.target.value })}
+                className={inputCls}
               />
             </div>
           </div>
 
           {form.retailer === 'Con Exclusive' && (
             <div>
-              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Which Con</label>
+              <label className={labelCls}>Which Con</label>
               <select
-                className={inputCls}
                 value={form.con_type}
                 onChange={(e) => setForm({ ...form, con_type: e.target.value })}
+                className={inputCls}
               >
                 <option value="">Select a con</option>
                 {CON_TYPES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
+                  <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </div>
@@ -203,74 +196,66 @@ export default function FigureFormPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Variant</label>
+              <label className={labelCls}>Variant</label>
               <select
-                className={inputCls}
                 value={form.variant}
                 onChange={(e) => setForm({ ...form, variant: e.target.value })}
+                className={inputCls}
               >
                 {VARIANTS.map((v) => (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
+                  <option key={v} value={v}>{v}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Size</label>
+              <label className={labelCls}>Size</label>
               <select
-                className={inputCls}
                 value={form.size}
                 onChange={(e) => setForm({ ...form, size: e.target.value })}
+                className={inputCls}
               >
                 {SIZES.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
+                  <option key={s} value={s}>{s}</option>
                 ))}
               </select>
             </div>
           </div>
 
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Product Type</label>
+            <label className={labelCls}>Product Type</label>
             <select
-              className={inputCls}
               value={form.product_type}
               onChange={(e) => setForm({ ...form, product_type: e.target.value })}
+              className={inputCls}
             >
               {PRODUCT_TYPES.map((p) => (
-                <option key={p} value={p}>
-                  {p === '' ? 'Standard Pop!' : p}
-                </option>
+                <option key={p} value={p}>{p === '' ? 'Standard Pop!' : p}</option>
               ))}
             </select>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Limited Edition</label>
+              <label className={labelCls}>Limited Edition</label>
               <select
-                className={inputCls}
                 value={form.le_tier}
                 onChange={(e) => setForm({ ...form, le_tier: e.target.value })}
+                className={inputCls}
               >
                 <option value="">None</option>
                 {LE_TIERS.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
+                  <option key={t} value={t}>{t}</option>
                 ))}
               </select>
             </div>
             {form.le_tier && (
               <div>
-                <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">LE Amount</label>
+                <label className={labelCls}>LE Amount</label>
                 <input
-                  className={inputCls}
                   value={form.le_amount}
                   onChange={(e) => setForm({ ...form, le_amount: e.target.value })}
                   placeholder="e.g. 1 of 2500"
+                  className={inputCls}
                 />
               </div>
             )}
@@ -278,56 +263,70 @@ export default function FigureFormPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Reference #</label>
+              <label className={labelCls}>Reference #</label>
               <input
-                className={inputCls}
                 value={form.reference_number}
                 onChange={(e) => setForm({ ...form, reference_number: e.target.value })}
                 placeholder="e.g. 1353"
+                className={inputCls}
               />
             </div>
             <div>
-              <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">SKU</label>
+              <label className={labelCls}>SKU</label>
               <input
-                className={inputCls}
                 value={form.sku}
                 onChange={(e) => setForm({ ...form, sku: e.target.value })}
                 placeholder="Your inventory SKU"
+                className={inputCls}
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Photo</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} className="text-sm text-card" />
-            {uploading && <div className="text-xs text-muted mt-1">Uploading...</div>}
-            {form.image_url && (
-              <img src={form.image_url} alt="preview" className="mt-2 w-24 h-24 object-contain bg-cardWindow rounded-sm" />
-            )}
+            <label className={labelCls}>Photo</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="text-xs text-muted font-mono"
+              />
+              {uploading && <span className="text-xs text-muted font-mono">Uploading...</span>}
+              {form.image_url && (
+                <img src={form.image_url} alt="Preview" className="w-24 h-24 object-contain" />
+              )}
+            </div>
           </div>
 
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Second Photo (optional)</label>
-            <input type="file" accept="image/*" onChange={handleFileChange2} className="text-sm text-card" />
-            {uploading2 && <div className="text-xs text-muted mt-1">Uploading...</div>}
-            {form.image_url_2 && (
-              <img src={form.image_url_2} alt="preview 2" className="mt-2 w-24 h-24 object-contain bg-cardWindow rounded-sm" />
-            )}
+            <label className={labelCls}>Second Photo (optional)</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange2}
+                className="text-xs text-muted font-mono"
+              />
+              {uploading2 && <span className="text-xs text-muted font-mono">Uploading...</span>}
+              {form.image_url_2 && (
+                <img src={form.image_url_2} alt="Preview 2" className="w-24 h-24 object-contain" />
+              )}
+            </div>
           </div>
 
           <div>
-            <label className="text-[10px] uppercase tracking-wide block mb-1 font-mono text-muted">Notes</label>
+            <label className={labelCls}>Notes</label>
             <textarea
-              className={inputCls}
-              style={{ minHeight: '70px' }}
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               placeholder="Condition, box status, quantity..."
+              style={{ minHeight: '70px' }}
+              className={inputCls}
             />
           </div>
         </div>
 
-                <div className="flex gap-3 mt-5">
+        <div className="flex gap-3 mt-5">
           <button
             type="button"
             onClick={() => router.push('/')}
@@ -343,3 +342,7 @@ export default function FigureFormPage() {
             {saving ? 'SAVING...' : isNew ? 'ADD TO CATALOG' : 'SAVE CHANGES'}
           </button>
         </div>
+      </form>
+    </div>
+  );
+}
